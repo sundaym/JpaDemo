@@ -1,6 +1,8 @@
 package com.demo.service;
 
 import com.demo.model.Employee;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
@@ -9,9 +11,23 @@ import javax.persistence.Persistence;
 import java.util.List;
 
 public class EmployeeServiceTest {
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("EmployeeService");
-    private EntityManager em = emf.createEntityManager();
-    private EmployeeService service = new EmployeeService(em);
+    private EntityManagerFactory emf;
+    private EntityManager em;
+    private EmployeeService service;
+
+    @Before
+    public void init() {
+        emf = Persistence.createEntityManagerFactory("EmployeeService");
+        em = emf.createEntityManager();
+        service = new EmployeeService(em);
+    }
+
+    @After
+    public void destory() {
+        // close the EM and EMF when done
+        em.close();
+        emf.close();
+    }
 
     @Test
     public void testCreateEmployee() {
@@ -21,9 +37,6 @@ public class EmployeeServiceTest {
         service.createEmployee(2, "John", 40000L);
         service.createEmployee(3, "Ana", 50000L);
         em.getTransaction().commit();
-        // close the EM and EMF when done
-        em.close();
-        emf.close();
     }
 
     @Test
@@ -31,9 +44,6 @@ public class EmployeeServiceTest {
         // find a specific employee
         Employee emp = service.findEmployee(1);
         System.out.println(emp);
-        // close the EM and EMF when done
-        em.close();
-        emf.close();
     }
 
     @Test
@@ -43,9 +53,6 @@ public class EmployeeServiceTest {
         for (Employee employee : allEmployees) {
             System.out.println(employee);
         }
-        // close the EM and EMF when done
-        em.close();
-        emf.close();
     }
 
     @Test
@@ -55,9 +62,6 @@ public class EmployeeServiceTest {
         Employee employee = service.raiseEmployeeSalary(1, 30000L);
         em.getTransaction().commit();
         System.out.println("Tom:" + employee);
-        // close the EM and EMF when done
-        em.close();
-        emf.close();
     }
 
     @Test
@@ -67,8 +71,5 @@ public class EmployeeServiceTest {
         service.removeEmployee(3);
         em.getTransaction().commit();
         System.out.println("Removed Employee 3");
-        // close the EM and EMF when done
-        em.close();
-        emf.close();
     }
 }
