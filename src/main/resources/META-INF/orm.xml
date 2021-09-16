@@ -4,7 +4,7 @@
     <persistence-unit-metadata>
 
         <!--JPA provider will ignore all annotations on the classes-->
-        <xml-mapping-metadata-complete/>
+        <!--<xml-mapping-metadata-complete/>-->
 
         <persistence-unit-defaults>
             <delimited-identifiers/>

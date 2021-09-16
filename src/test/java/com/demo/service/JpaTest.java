@@ -24,13 +24,19 @@ public class JpaTest {
     public void init() {
         emf = Persistence.createEntityManagerFactory("EmployeeService");
         em = emf.createEntityManager();
+        // 开启事务
         transaction = em.getTransaction();
         transaction.begin();
     }
 
+    /**
+     * 关闭资源顺序和创建资源顺序相反
+     */
     @After
     public void destory() {
+        // 提交事务
         transaction.commit();
+        // 释放资源
         em.close();
         emf.close();
     }
@@ -40,6 +46,7 @@ public class JpaTest {
      */
     @Test
     public void testFind() {
+        // 根据id查询，立即查询数据库
         Employee employee = em.find(Employee.class, 1);
         System.out.println("------------------------");
         System.out.println(employee);
@@ -50,6 +57,7 @@ public class JpaTest {
      */
     @Test
     public void testGetReference() {
+        // 获取一个动态代理对象，不会立刻发送SQL语句查询数据库，延迟装载
         Employee employee = em.getReference(Employee.class, 1);
         String name = employee.getClass().getName();
         System.out.println("Proxy class name:" + name);
